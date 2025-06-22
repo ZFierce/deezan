@@ -14,7 +14,7 @@ import {
   Flex,
   useColorModeValue,
   keyframes,
-} from "@chakra-ui/react";
+} from "@emotion/react";
 import { FaShippingFast, FaLeaf, FaShieldAlt, FaMobileAlt } from "react-icons/fa";
 
 const fadeIn = keyframes`
