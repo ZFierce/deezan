@@ -1,61 +1,116 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
+import {
+  ChakraProvider,
+  Box,
+  Heading,
+  Text,
+  Button,
+  VStack,
+  HStack,
+  Container,
+  SimpleGrid,
+  Icon,
+  Link,
+  Flex,
+  useColorModeValue,
+  keyframes,
+} from "@chakra-ui/react";
+import { FaShippingFast, FaLeaf, FaShieldAlt, FaMobileAlt } from "react-icons/fa";
 
-function App() {
-  const [text, setText] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px) }
+  to { opacity: 1; transform: translateY(0) }
+`;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("text", text);
-
-      const res = await axios.post(
-        "https://your-backend-url.onrender.com/submit",
-        formData
-      );
-      setResults(res.data);
-    } catch (err) {
-      alert("Error fetching data");
-    }
-    setLoading(false);
-  };
+function LandingPage() {
+  const fadeInAnimation = `${fadeIn} 1s ease forwards`;
 
   return (
-    <div style={{ maxWidth: 600, margin: "40px auto", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ textAlign: "center" }}>Fashion Finder</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-        <input
-          type="text"
-          placeholder="Describe the clothing item"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          style={{ width: "100%", padding: 10, fontSize: 16 }}
-        />
-        <button type="submit" style={{ marginTop: 10, padding: 10, width: "100%" }}>
-          {loading ? "Searching..." : "Search"}
-        </button>
-      </form>
+    <Box fontFamily="'Poppins', sans-serif" minH="100vh" bgGradient="linear(to-r, gray.50, white)">
+      {/* Hero Section */}
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        textAlign="center"
+        py={{ base: 20, md: 32 }}
+        px={4}
+        maxW="container.md"
+        mx="auto"
+      >
+        <Heading
+          fontSize={{ base: "4xl", md: "6xl" }}
+          fontWeight="extrabold"
+          mb={6}
+          animation={fadeInAnimation}
+          color={useColorModeValue("gray.900", "white")}
+        >
+          Discover Your Style, Smarter
+        </Heading>
+        <Text
+          fontSize={{ base: "lg", md: "2xl" }}
+          mb={8}
+          maxW="600px"
+          animation={fadeInAnimation}
+          animationDelay="0.3s"
+          color={useColorModeValue("gray.600", "gray.300")}
+        >
+          Find affordable alternatives to luxury fashion effortlessly with AI.
+        </Text>
+        <HStack spacing={6} animation={fadeInAnimation} animationDelay="0.6s">
+          <Button colorScheme="blackAlpha" size="lg" px={8} fontWeight="bold" borderRadius="md">
+            Get Started
+          </Button>
+          <Button variant="outline" size="lg" px={8} borderRadius="md">
+            Learn More
+          </Button>
+        </HStack>
+      </Flex>
 
-      <div>
-        {results.length === 0 && !loading && <p>No results yet.</p>}
-        {results.map((item, i) => (
-          <div key={i} style={{ marginBottom: 20, borderBottom: "1px solid #ccc", paddingBottom: 10 }}>
-            <a href={item.link} target="_blank" rel="noreferrer" style={{ fontWeight: "bold", fontSize: 18 }}>
-              {item.title}
-            </a>
-            <p>{item.brand} - {item.price}</p>
-            {item.thumbnail && (
-              <img src={item.thumbnail} alt={item.title} style={{ maxWidth: "100%", height: "auto" }} />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
+      {/* Features Section */}
+      <Box bg="white" py={{ base: 16, md: 24 }} px={4} boxShadow="sm" mt={12}>
+        <Container maxW="container.lg">
+          <SimpleGrid columns={{ base: 1, md: 4 }} spacing={10}>
+            <Feature icon={FaShippingFast} title="Fast Results" desc="Get instant recommendations tailored to your style." />
+            <Feature icon={FaLeaf} title="Eco-Friendly Choices" desc="We highlight sustainable and ethical brands." />
+            <Feature icon={FaShieldAlt} title="Trusted Retailers" desc="Only well-known and reliable stores included." />
+            <Feature icon={FaMobileAlt} title="Easy to Use" desc="Search by text, photo, or link — on any device." />
+          </SimpleGrid>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box
+        as="footer"
+        bg="gray.900"
+        color="gray.400"
+        py={6}
+        textAlign="center"
+        fontSize="sm"
+        mt={24}
+      >
+        &copy; {new Date().getFullYear()} Fashion Finder. All rights reserved.
+      </Box>
+    </Box>
   );
 }
 
-export default App;
+function Feature({ icon, title, desc }) {
+  return (
+    <VStack align="start" spacing={4}>
+      <Icon as={icon} boxSize={10} color="blue.600" />
+      <Heading as="h3" size="md" fontWeight="semibold" color="gray.800">
+        {title}
+      </Heading>
+      <Text color="gray.600">{desc}</Text>
+    </VStack>
+  );
+}
+
+export default function App() {
+  return (
+    <ChakraProvider>
+      <LandingPage />
+    </ChakraProvider>
+  );
+}
